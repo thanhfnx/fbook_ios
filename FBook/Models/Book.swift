@@ -23,7 +23,6 @@ struct Book: Mappable {
         var deletedAt: Date?
 
         init?(map: Map) {
-            mapping(map: map)
         }
 
         mutating func mapping(map: Map) {
@@ -48,7 +47,6 @@ struct Book: Mappable {
         var owners: [User]?
 
         init?(map: Map) {
-            mapping(map: map)
         }
 
         mutating func mapping(map: Map) {
@@ -77,11 +75,11 @@ struct Book: Mappable {
     init() {}
 
     init?(map: Map) {
+        detail = Detail(map: map)
+        users = ListUsers(map: map)
     }
 
     mutating func mapping(map: Map) {
-        detail = Detail(map: map)
-        users = ListUsers(map: map)
         id <- map["id"]
         title <- map["title"]
         description <- map["description"]
@@ -92,6 +90,12 @@ struct Book: Mappable {
         totalView <- map["count_view"]
         averageStar <- map["avg_star"]
         thumbnail <- map["image.mobile.thumbnail_path"]
+    }
+
+    mutating func appendDetail(from book: Book) {
+        if book.id == id {
+            self.detail = book.detail
+        }
     }
 
 }
